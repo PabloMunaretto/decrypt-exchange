@@ -4,7 +4,7 @@ const Token = artifacts.require("./Token");
 
 require("chai").use(require("chai-as-promised")).should();
 
-contract("Exchange", ([deployer, feeAccount, user1]) => {
+contract("Exchange", ([deployer, feeAccount, user1, user2]) => {
   // or 'accounts'
   let token, exchange;
   let feePercent = "10";
@@ -235,5 +235,58 @@ contract("Exchange", ([deployer, feeAccount, user1]) => {
       event.amountGive.toString().should.eq(ether(1), 'amount to give is correct')
       event.timestamp.toString().length.should.be.at.least(1, 'timestamp is present')
     })
+  })
+
+  describe('order actions', () => {
+    beforeEach(async() => {
+      // user 1 deposits 1 ether
+      await exchange.depositEther({ from: user1, value: ether(1) });
+      // user 1 make an order to buy tokens with ether
+      await exchange.makeOrder(token.address, tokens(1), ETHER_ADDRESS, ether(1), { from: user1 });
+    })
+
+    describe('cancelling orders', () => {
+      let result;
+
+      describe('success', () => {
+        beforeEach(async() => {
+          result = await exchange.cancelOrder('1', { from: user1 })
+        })
+
+        it('updates cancelled orders', async() => {
+          const orderCancelled = await exchange.orderCancelled('1');
+          orderCancelled.should.eq(true);
+        })
+
+        it('emits a "Cancel" event', async() => {
+          const log = result.logs[0];
+          log.event.should.eq("Cancel");
+          const event = log.args;
+          event.id
+          .toString()
+          .should.eq('1', "id  is correct");
+          event.user.should.eq(user1, 'user is correct')
+          event.tokenGet.should.eq(token.address, 'token to get is correct')
+          event.amountGet.toString().should.eq(tokens(1), 'amount to get is correct')
+          event.tokenGive.should.eq(ETHER_ADDRESS, 'Ether to give is correct')
+          event.amountGive.toString().should.eq(ether(1), 'amount to give is correct')
+          event.timestamp.toString().length.should.be.at.least(1, 'timestamp is present')
+        })
+      })
+
+      describe('failure', () => {
+
+        it('rejects invalid order ids', async() => {
+          const invalidOrderId = 9999;
+          await exchange.cancelOrder(invalidOrderId, { from: user1 }).should.be.rejectedWith(EVM_revert);
+        })
+
+        it('rejects unauthorized cancelations', async() => {
+          // Try to cancel another user's order.
+          await exchange.cancelOrder('1', { from: user2 }).should.be.rejectedWith(EVM_revert);
+        })
+      })
+    })
+
   })
 });
