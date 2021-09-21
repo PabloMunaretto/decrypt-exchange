@@ -7,7 +7,7 @@ import Content from './Content';
 import { loadProvider, loadAccount, loadToken, loadExchange } from '../store/stateHooks'
 import { accountSelector, contractsLoaderSelector } from '../store/storeSelectors'
 
-function App({ contracts, accountLoaded }) {
+function App({ contractsLoaded, accountLoaded }) {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -20,9 +20,8 @@ function App({ contracts, accountLoaded }) {
     const token = loadToken(web3, dispatch);
     const exchange = loadExchange(web3, dispatch);
   }
-  
   const renderContent = () => {
-    if (contracts) {
+    if (contractsLoaded) {
       return <Content />
     }
   }
