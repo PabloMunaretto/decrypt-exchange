@@ -2,24 +2,20 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import './App.css';
 import Token from '../abis/Token.json';
-import { loadProvider } from '../store/stateHooks'
+import { loadProvider, loadAccount, loadToken, loadExchange } from '../store/stateHooks'
 
 function App() {
   const dispatch = useDispatch()
-  
+
   useEffect(() => {
     loadBlockchainData()
   }, [])
 
   const loadBlockchainData = async() => {
     const web3 = loadProvider(dispatch);
-    const networkId = await web3.eth.net.getId()
-    const accounts = await web3.eth.getAccounts();
-    const abi = Token.abi;
-    const tokenAddress = Token.networks[networkId].address;
-    const token = new web3.eth.Contract(abi, tokenAddress);
-    const totalSupply = await token.methods.totalSupply().call()
-    console.log("totalSupply", web3.utils.fromWei(totalSupply, 'Ether'))
+    const account = loadAccount(web3, dispatch);
+    const token = loadToken(web3, dispatch);
+    const exchange = loadExchange(web3, dispatch);
   }
   
   return (

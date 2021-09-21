@@ -1,6 +1,6 @@
 import logger from 'redux-logger';
 import { configureStore } from '@reduxjs/toolkit'
-import rootReducer from './reducers';
+import web3Reducer, { tokenReducer, exchangeReducer } from './reducers';
 
 
 const preloadedState = {};
@@ -8,7 +8,9 @@ const preloadedState = {};
 export default configureStore({
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
     reducer: {
-        web3State: rootReducer,
+        web3State: web3Reducer,
+        tokenData: tokenReducer,
+        dexData: exchangeReducer,
     },
     preloadedState,
 })
