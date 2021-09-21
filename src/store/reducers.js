@@ -22,7 +22,7 @@ const tokenSlice = createSlice({
     reducers: {
         tokenLoaded: (state, action) => {
             const { payload } = action
-            return payload;
+            return { ...state, loaded: true, ...payload };
         }
     }
 })
@@ -33,7 +33,7 @@ const exchangeSlice = createSlice({
     reducers: {
         dexLoaded: (state, action) => {
             const { payload } = action
-            return payload;
+            return { ...state, loaded: true, ...payload };
         }
     }
 })

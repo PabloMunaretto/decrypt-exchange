@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import { loadWeb3, web3AccountLoaded, tokenLoaded, dexLoaded } from './reducers';
 import Web3 from 'web3';
 import Token from '../abis/Token.json';
@@ -43,9 +42,3 @@ export const loadExchange = async(web3, dispatch) => {
         return null;
     }
 }
-
-// export const estado = () => {
-//     const web3State = useSelector(state => state.web3State)
-//     console.log("web3state", web3State)
-//     return web3State;
-// }
