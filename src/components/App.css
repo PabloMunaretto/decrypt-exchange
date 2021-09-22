@@ -144,6 +144,12 @@
 .card-body .price-chart .price {
   padding-left: 20px;
 }
+td {
+  color: white;
+}
+th {
+  color: white;
+}
 
 td.cancel-order {
   cursor: pointer;

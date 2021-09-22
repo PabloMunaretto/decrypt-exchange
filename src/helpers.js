@@ -14,4 +14,14 @@ export const wait = (seconds) => {
     const milliseconds = seconds * 1000;
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 } 
-module.exports = { ETHER_ADDRESS, ether, tokens, wait }
+
+export const formatToken = (number) => {
+    const formatedNumber = web3.utils.fromWei(number, 'Ether') // every other token 18 decimals
+    return Number(formatedNumber)
+}
+export const RED = 'danger'
+export const GREEN = 'success'
+
+export const formatEth = (eth) => formatToken(eth)
+
+export default { ETHER_ADDRESS, ether, tokens, wait, formatEth, formatToken, RED, GREEN }
