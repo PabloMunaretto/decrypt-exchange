@@ -1,6 +1,6 @@
 import logger from 'redux-logger';
 import { configureStore } from '@reduxjs/toolkit'
-import web3Reducer, { tokenReducer, exchangeReducer } from './reducers';
+import { web3Reducer, tokenReducer, exchangeReducer } from './reducers';
 
 
 const preloadedState = {};

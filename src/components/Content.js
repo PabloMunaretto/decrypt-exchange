@@ -1,6 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, connect } from 'react-redux';
+import { exchangeSelector } from '../store/storeSelectors';
+import { loadAllOrders } from '../store/stateHooks';
 
-function Content() {
+
+function Content({ exchange }) {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    loadBlockchainData()
+  }, [])
+
+
+  const loadBlockchainData = async() => {
+    const allOrders = await loadAllOrders(exchange, dispatch);
+
+  }
+  
     return (
       <div className="content">
         <div className="vertical-split">
@@ -68,5 +84,10 @@ function Content() {
       </div>
     )
 }
+const hydrateRedux = (state) => { // hydrate App with redux state
+  return ({
+    exchange: exchangeSelector(state)
+  })
+};
 
-export default Content
+export default connect(hydrateRedux)(Content);

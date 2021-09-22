@@ -34,14 +34,27 @@ const exchangeSlice = createSlice({
         dexLoaded: (state, action) => {
             const { payload } = action
             return { ...state, loaded: true, ...payload };
+        },
+        cldOrdersLoaded: (state, action) => {
+            const { payload } = action
+            return { ...state, cancelledOrders: { loaded: true, data: payload }}
+        },
+        filledOrdersLoaded: (state, action) => {
+            const { payload } = action
+            return { ...state, filledOrders: { loaded: true, data: payload }}
+        },
+        allOrdersLoaded: (state, action) => {
+            const { payload } = action
+            return { ...state, allOrders: { loaded: true, data: payload }}
         }
     }
 })
 
 export const { loadWeb3, web3AccountLoaded } = web3Slice.actions;
 export const { tokenLoaded } = tokenSlice.actions
-export const { dexLoaded } = exchangeSlice.actions
+export const { dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded } = exchangeSlice.actions
 
+export const web3Reducer = web3Slice.reducer
 export const tokenReducer = tokenSlice.reducer;
 export const exchangeReducer = exchangeSlice.reducer;
-export default web3Slice.reducer
+

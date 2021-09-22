@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector, connect } from 'react-redux';
-import { get } from 'lodash'; 
+import { useDispatch, connect } from 'react-redux';
 import './App.css';
 import NavBar from './NavBar';
 import Content from './Content';
@@ -16,20 +15,23 @@ function App({ contractsLoaded, accountLoaded }) {
 
   const loadBlockchainData = async() => {
     const web3 = loadProvider(dispatch);
-    const account = loadAccount(web3, dispatch);
-    const token = loadToken(web3, dispatch);
-    const exchange = loadExchange(web3, dispatch);
-  }
-  const renderContent = () => {
-    if (contractsLoaded) {
-      return <Content />
+    await loadAccount(web3, dispatch);
+    const token = await loadToken(web3, dispatch);
+    if (!token) {
+      window.alert("Token Smart Contract not detected on the current network, please select another network with Metamask.");
+      return
+    }
+    const exchange = await loadExchange(web3, dispatch);
+    if (!exchange) {
+      window.alert("Exchange Smart Contract not detected on the current network, please select another network with Metamask.");
+      return
     }
   }
 
   return (
     <div>
       <NavBar account={accountLoaded}/>
-      {renderContent()}
+      { contractsLoaded ? <Content /> : <div className="content"></div> }
     </div>
   );
 }
