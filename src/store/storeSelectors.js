@@ -1,4 +1,4 @@
-import { get } from 'lodash'; 
+import { get, reject, groupBy } from 'lodash'; 
 import { createSelector } from 'reselect';
 import moment from 'moment';
 import { ETHER_ADDRESS, ether, tokens, wait, formatEth, formatToken, RED, GREEN } from '../helpers';
@@ -21,6 +21,21 @@ export const contractsLoaderSelector = createSelector(
 const exchange = state => get(state, 'dexData.contract');
 export const exchangeSelector = createSelector(exchange, ex => ex)
 
+// ---------- ALL ORDERS
+const allOrdersLoaded = state => get(state, 'dexData.allOrders.loaded', false)
+export const allOrdersLoadedSelector = createSelector(allOrdersLoaded, allO => allO)
+
+const allOrders = state => get(state, 'dexData.allOrders.data')
+export const allOrdersSelector = createSelector(allOrders, all => all);
+
+// ---------- CANCELLED ORDERS
+const cancelledOrdersLoaded = state => get(state, 'dexData.cancelledOrders.loaded', false);   
+export const cancelledOrdersLoadedSelector = createSelector(cancelledOrdersLoaded, loaded => loaded);
+
+const cancelledOrders = state => get(state, 'dexData.cancelledOrders.data', [])
+export const cancelledOrdersSelector = createSelector(cancelledOrders, cldOrders => cldOrders)
+
+// ---------- FILLED ORDERS
 const filledOrdersLoaded = state => get(state, 'dexData.filledOrders.loaded', false);   
 export const filledOrdersLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded);
 
@@ -38,11 +53,6 @@ export const filledOrdersSelector = createSelector(
         return orders
     } 
 );
-
-const allOrders = state => get(state, 'dexData.allOrders.data')
-export const allOrdersSelector = createSelector(allOrders, all => all);
-
-
 const decorateFilledOrders = (orders) => {
     // Track previous order to compare history
     let previousOrder = orders[0];
@@ -96,4 +106,63 @@ const tokenPriceClass = (tokenPrice, orderId, previousOrder) => {
     } else {
         return RED // 'danger'
     }
+}
+
+const openOrders = state => {
+    const all = allOrders(state);
+    const cancelled = cancelledOrders(state);
+    const filled = filledOrders(state)
+
+    const openOrders = reject(all, (order) => { // Reject orders if they're filled or cancelled (with lodash "reject")
+        const orderFilled = filled.some(o => o.id === order.id)
+        const orderCancelled = cancelled.some(oc => oc.id === order.id)
+        return (orderFilled || orderCancelled) 
+    })
+    return openOrders;
+}
+// ---------- ORDER BOOK 
+const orderBookLoaded = state => cancelledOrdersLoaded(state) && filledOrdersLoaded(state) && allOrdersLoaded(state)
+export const orderBookSelector = createSelector(
+    openOrders, // Substract cancelled & filled from all Orders
+    (orders) => {
+        // Decorate orders
+        orders = decorateOrderBookOrders(orders);
+        // lodash 'groupBy' orderType.
+        orders = groupBy(orders, 'orderType');
+        // Fetch buy orders
+        const buyOrders = get(orders, 'buy', [])
+        // Sort buy orders by token price
+        orders = {
+            ...orders,
+            buyOrders: buyOrders.sort((a,b) => b.tokenPrice - a.tokenPrice)
+        }
+        // Fetch sell orders
+        const sellOrders = get(orders, 'sell', [])
+        // Sort sell orders by token price
+        orders = {
+            ...orders,
+            sellOrders: sellOrders.sort((a,b) => b.tokenPrice - a.tokenPrice)
+        }
+        return orders;
+    }
+)
+
+const decorateOrderBookOrders = (orders) => {
+    return (
+        orders.map(order => {
+            order = decorateOrder(order)
+            // & Decorate order Book
+            order = decorateOrderBookOrder(order)
+            return order;
+        })
+    )
+}
+const decorateOrderBookOrder = (order) => {
+    const orderType = order.togenGive === ETHER_ADDRESS ? 'buy' : 'sell';
+    return ({
+        ...order,
+        orderType,
+        orderTypeClass: (orderType === 'buy' ? GREEN : RED),
+        orderFillClass: orderType === 'buy' ? 'sell' : 'buy'
+    })
 }
