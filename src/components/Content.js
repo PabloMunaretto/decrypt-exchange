@@ -4,6 +4,7 @@ import { exchangeSelector } from '../store/storeSelectors';
 import { loadAllOrders } from '../store/stateHooks';
 import Trades from './Trades';
 import OrderBook from './OrderBook';
+import MyTransactions from './MyTransactions'
 
 function Content({ exchange }) {
   const dispatch = useDispatch()
@@ -51,15 +52,7 @@ function Content({ exchange }) {
               <a href="/#" className="card-link">Card link</a>
             </div>
           </div>
-          <div className="card bg-dark text-white">
-            <div className="card-header">
-              Card Title
-            </div>
-            <div className="card-body">
-              <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="/#" className="card-link">Card link</a>
-            </div>
-          </div>
+          <MyTransactions />
         </div>
         <Trades />
       </div>
