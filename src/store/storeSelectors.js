@@ -121,7 +121,7 @@ const openOrders = state => {
     return openOrders;
 }
 // ---------- ORDER BOOK 
-const orderBookLoaded = state => cancelledOrdersLoaded(state) && filledOrdersLoaded(state) && allOrdersLoaded(state)
+export const orderBookLoaded = state => cancelledOrdersLoaded(state) && filledOrdersLoaded(state) && allOrdersLoaded(state)
 export const orderBookSelector = createSelector(
     openOrders, // Substract cancelled & filled from all Orders
     (orders) => {
@@ -158,7 +158,7 @@ const decorateOrderBookOrders = (orders) => {
     )
 }
 const decorateOrderBookOrder = (order) => {
-    const orderType = order.togenGive === ETHER_ADDRESS ? 'buy' : 'sell';
+    const orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell';
     return ({
         ...order,
         orderType,

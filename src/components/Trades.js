@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { filledOrdersLoadedSelector, filledOrdersSelector } from "../store/storeSelectors";
 
 function Trades({ filledOrdersLoaded, filledOrders }) {
-    console.log("TRADE", filledOrders)
+
   return (
     <div className="vertical">
       <div className="card bg-dark text-white">
