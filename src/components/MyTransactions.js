@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { Tabs, Tab } from "react-bootstrap";
 import Spinner from './Spinner'
 
@@ -7,13 +7,18 @@ import {
     myFilledOrdersLoadedSelector, 
     myFilledOrdersSelector, 
     myOpenOrdersLoadedSelector, 
-    myOpenOrdersSelector
+    myOpenOrdersSelector,
+    exchangeSelector,
+    accountSelector,
+    orderCancellingSelector
 } from '../store/storeSelectors';
+import { cancelOrder } from '../store/stateHooks'
 
-const showFilledOrders = (filledOrders) => {
+const showFilledOrders = ({ myFilledOrders }) => {
+  
     return (
         <tbody>
-            { filledOrders.map(order => {
+            { myFilledOrders.map(order => {
                 const { formattedTimestamp, orderTypeClass, orderSign, tokenAmount, tokenPrice } = order
                 return (
                     <tr key={order.id}>
@@ -27,16 +32,22 @@ const showFilledOrders = (filledOrders) => {
         </tbody>
     )
 }
-const showOpenOrders = (openOrders) => {
-    return (
+const showOpenOrders = ({ exchange, myOpenOrders, account }, dispatch) => {
+
+  return (
         <tbody>
-            { openOrders.map(order => {
+            { myOpenOrders.map(order => {
                 const { orderTypeClass, tokenAmount, tokenPrice } = order
                 return (
                     <tr key={order.id}>
                         <td className={`text-${orderTypeClass}`}>{tokenAmount}</td>
                         <td className={`text-${orderTypeClass}`}>{tokenPrice}</td>
-                        <td className="text-muted">x</td>
+                        <td 
+                        className="text-muted cancel-order"
+                        onClick={() => cancelOrder(exchange, dispatch, order, account) }
+                        >
+                          x
+                        </td>
                     </tr>
                 )
             })
@@ -45,8 +56,9 @@ const showOpenOrders = (openOrders) => {
     )
 }
 
-function MyTransactions({ myFilledOrders, showMyFilledOrders, myOpenOrders, showMyOpenOrders }) {
-
+function MyTransactions(props) {
+  const dispatch = useDispatch()
+console.log("orderCancelling", props.orderCancelling)
   return (
     <div className="card bg-dark text-white">
       <div className="card-header">My Transactions</div>
@@ -61,10 +73,10 @@ function MyTransactions({ myFilledOrders, showMyFilledOrders, myOpenOrders, show
                   <th>PBS/ETH</th>
                 </tr>
               </thead>
-              { myFilledOrders ? showFilledOrders(showMyFilledOrders) : <Spinner type='table' /> }
+              { props.showMyFilledOrders ? showFilledOrders(props, dispatch) : <Spinner type='table' /> }
             </table>
           </Tab>
-          <Tab eventKey="orders" title="Orders">
+          <Tab eventKey="orders" title="Orders" >
             <table className="table table-dark table-sm small">
               <thead>
                 <tr>
@@ -73,7 +85,7 @@ function MyTransactions({ myFilledOrders, showMyFilledOrders, myOpenOrders, show
                   <th>Cancel</th>
                 </tr>
               </thead>
-              { myOpenOrders ? showOpenOrders(showMyOpenOrders) : <Spinner type='table' /> }
+              { props.showMyOpenOrders ? showOpenOrders(props, dispatch) : <Spinner type='table' /> }
             </table>
           </Tab>
         </Tabs>
@@ -82,11 +94,17 @@ function MyTransactions({ myFilledOrders, showMyFilledOrders, myOpenOrders, show
   );
 }
 const hydrateRedux = (state) => {
+  // Show open orders if there are any, and if there's no cancelling tx
+  const myOpenOrdersLoaded = myOpenOrdersLoadedSelector(state);
+  const orderCancelling = orderCancellingSelector(state) 
+
     return ({
-        myFilledOrders: myFilledOrdersLoadedSelector(state), 
-        showMyFilledOrders: myFilledOrdersSelector(state), 
-        myOpenOrders: myOpenOrdersLoadedSelector(state), 
-        showMyOpenOrders: myOpenOrdersSelector(state)
+        myFilledOrders: myFilledOrdersSelector(state), 
+        showMyFilledOrders: myFilledOrdersLoadedSelector(state), 
+        myOpenOrders: myOpenOrdersSelector(state), 
+        showMyOpenOrders: myOpenOrdersLoaded && !orderCancelling,
+        exchange: exchangeSelector(state),
+        account: accountSelector(state),
     })
 }
 

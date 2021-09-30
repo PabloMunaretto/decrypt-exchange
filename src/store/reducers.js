@@ -46,13 +46,30 @@ const exchangeSlice = createSlice({
         allOrdersLoaded: (state, action) => {
             const { payload } = action
             return { ...state, allOrders: { loaded: true, data: payload }}
+        },
+        orderCancelling: (state, action) => {
+            return { ...state, orderCancelling: true }
+        },
+        orderCancelled: (state, action) => {
+            const { payload } = action
+            return { 
+                ...state, 
+                orderCancelling: false, 
+                cancelledOrders: {
+                    ...state.cancelledOrders,
+                    data: [
+                        ...state.cancelledOrders.data,
+                        payload
+                    ]
+                }
+            }
         }
     }
 })
 
 export const { loadWeb3, web3AccountLoaded } = web3Slice.actions;
 export const { tokenLoaded } = tokenSlice.actions
-export const { dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded } = exchangeSlice.actions
+export const { dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled } = exchangeSlice.actions
 
 export const web3Reducer = web3Slice.reducer
 export const tokenReducer = tokenSlice.reducer;

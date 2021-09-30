@@ -292,3 +292,8 @@ const buildGraphData = (orders) => {
     })    
     return graphData
 }
+
+// Order cancelling
+const orderCancelling = state => get(state, 'dexData.orderCancelling', false)
+export const orderCancellingSelector = createSelector(orderCancelling, status => status)
+

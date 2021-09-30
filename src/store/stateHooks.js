@@ -1,4 +1,4 @@
-import { loadWeb3, web3AccountLoaded, tokenLoaded, dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded } from './reducers';
+import { loadWeb3, web3AccountLoaded, tokenLoaded, dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled } from './reducers';
 import Web3 from 'web3';
 import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json'
@@ -65,4 +65,22 @@ export const loadAllOrders = async(exchange, dispatch) => {
     dispatch(allOrdersLoaded(allOrders))
 
     return cancelledOrders;
+}
+
+// --------- Cancel Orders
+export const cancelOrder = async(exchange, dispatch, order, account) => {
+    exchange.methods.cancelOrder(order.id).send({ from: account })
+        .on('transactionHash', (hash) => {
+            dispatch(orderCancelling())
+        })
+        .on('error', (error) => {
+            console.log(error)
+            window.alert('There was an error cancelling tx')
+        })
+}
+
+export const subscribeToEvents = async(exchange, dispatch) => {
+    exchange.events.Cancel({}, (error, event) => {
+        dispatch(orderCancelled(event.returnValues))
+    })
 }

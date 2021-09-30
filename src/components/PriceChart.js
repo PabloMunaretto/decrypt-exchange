@@ -2,7 +2,7 @@ import React from "react";
 import Chart from 'react-apexcharts'
 import { connect } from 'react-redux'
 import Spinner from './Spinner'
-import { chartOptions, dummyData } from './PriceChart.config'
+import { chartOptions } from './PriceChart.config'
 import {
     priceChartLoadedSelector,
     priceChartSelector

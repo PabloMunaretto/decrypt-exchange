@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, connect } from 'react-redux';
 import { exchangeSelector } from '../store/storeSelectors';
-import { loadAllOrders } from '../store/stateHooks';
+import { loadAllOrders, subscribeToEvents } from '../store/stateHooks';
 import Trades from './Trades';
 import OrderBook from './OrderBook';
 import MyTransactions from './MyTransactions'
@@ -16,8 +16,8 @@ function Content({ exchange }) {
 
 
   const loadBlockchainData = async() => {
-    const allOrders = await loadAllOrders(exchange, dispatch);
-
+    await loadAllOrders(exchange, dispatch);
+    await subscribeToEvents(exchange, dispatch)
   }
   
     return (
