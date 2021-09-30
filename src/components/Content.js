@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useDispatch, connect } from 'react-redux';
 import { exchangeSelector } from '../store/storeSelectors';
 import { loadAllOrders, subscribeToEvents } from '../store/stateHooks';
@@ -10,15 +10,14 @@ import PriceChart from './PriceChart'
 function Content({ exchange }) {
   const dispatch = useDispatch()
 
+  const loadBlockchainData = useCallback(async() => {
+      await loadAllOrders(exchange, dispatch);
+      await subscribeToEvents(exchange, dispatch)
+  }, [exchange, dispatch])
+    
   useEffect(() => {
     loadBlockchainData()
-  }, [])
-
-
-  const loadBlockchainData = async() => {
-    await loadAllOrders(exchange, dispatch);
-    await subscribeToEvents(exchange, dispatch)
-  }
+  }, [loadBlockchainData])
   
     return (
       <div className="content">

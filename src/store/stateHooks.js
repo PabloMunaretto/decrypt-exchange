@@ -1,4 +1,4 @@
-import { loadWeb3, web3AccountLoaded, tokenLoaded, dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled } from './reducers';
+import { loadWeb3, web3AccountLoaded, tokenLoaded, dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled, orderFilling, orderFilled } from './reducers';
 import Web3 from 'web3';
 import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json'
@@ -67,6 +67,16 @@ export const loadAllOrders = async(exchange, dispatch) => {
     return cancelledOrders;
 }
 
+// --------- Smart C events from main functions
+export const subscribeToEvents = async(exchange, dispatch) => {
+    exchange.events.Cancel({}, (error, event) => {
+        dispatch(orderCancelled(event.returnValues))
+    })
+    exchange.events.Trade({}, (error, event) => {
+        dispatch(orderFilled(event.returnValues))
+    })
+}
+
 // --------- Cancel Orders
 export const cancelOrder = async(exchange, dispatch, order, account) => {
     exchange.methods.cancelOrder(order.id).send({ from: account })
@@ -75,12 +85,18 @@ export const cancelOrder = async(exchange, dispatch, order, account) => {
         })
         .on('error', (error) => {
             console.log(error)
-            window.alert('There was an error cancelling tx')
+            window.alert('There was an error cancelling the order')
         })
 }
 
-export const subscribeToEvents = async(exchange, dispatch) => {
-    exchange.events.Cancel({}, (error, event) => {
-        dispatch(orderCancelled(event.returnValues))
-    })
+// --------- Fill Orders
+export const fillOrder = async(exchange, dispatch, order, account) => {
+    exchange.methods.fillOrder(order.id).send({ from: account })
+        .on('transactionHash', (hash) => {
+            dispatch(orderFilling())
+        })
+        .on('error', (error) => {
+            console.log(error)
+            window.alert('There was an error filling the order')
+        })
 }

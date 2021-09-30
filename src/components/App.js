@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useDispatch, connect } from 'react-redux';
 import './App.css';
 import NavBar from './NavBar';
@@ -8,12 +8,8 @@ import { accountSelector, contractsLoaderSelector } from '../store/storeSelector
 
 function App({ contractsLoaded, accountLoaded }) {
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    loadBlockchainData()
-  }, [])
-
-  const loadBlockchainData = async() => {
+  
+  const loadBlockchainData = useCallback(async() => {
     const web3 = loadProvider(dispatch);
     await loadAccount(web3, dispatch);
     const token = await loadToken(web3, dispatch);
@@ -26,7 +22,11 @@ function App({ contractsLoaded, accountLoaded }) {
       window.alert("Exchange Smart Contract not detected on the current network, please select another network with Metamask.");
       return
     }
-  }
+  }, [dispatch,])
+
+  useEffect(() => {
+    loadBlockchainData()
+  }, [loadBlockchainData])
 
   return (
     <div>

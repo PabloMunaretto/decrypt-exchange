@@ -58,7 +58,6 @@ const showOpenOrders = ({ exchange, myOpenOrders, account }, dispatch) => {
 
 function MyTransactions(props) {
   const dispatch = useDispatch()
-console.log("orderCancelling", props.orderCancelling)
   return (
     <div className="card bg-dark text-white">
       <div className="card-header">My Transactions</div>

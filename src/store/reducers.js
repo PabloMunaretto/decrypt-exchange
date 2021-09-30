@@ -63,13 +63,35 @@ const exchangeSlice = createSlice({
                     ]
                 }
             }
-        }
+        },
+        orderFilling: (state, action) => {
+            return { ...state, orderFilling: true }
+        },
+        orderFilled: (state, action) => {
+            const { payload } = action
+            // Prevent duplucate orders
+            const index = state.filledOrders.data.findIndex(order => order.id === payload.id)
+            let data;
+            if (index === -1) {
+                data = [ ...state.filledOrders.data, payload ]
+            } else {
+                data = state.filledOrders.data
+            }
+            return {
+                ...state,
+                orderFilling: false,
+                filledOrders: {
+                    ...state.filledOrders,
+                    data
+                }
+            }
+        },
     }
 })
 
 export const { loadWeb3, web3AccountLoaded } = web3Slice.actions;
 export const { tokenLoaded } = tokenSlice.actions
-export const { dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled } = exchangeSlice.actions
+export const { dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled, orderFilling, orderFilled } = exchangeSlice.actions
 
 export const web3Reducer = web3Slice.reducer
 export const tokenReducer = tokenSlice.reducer;
