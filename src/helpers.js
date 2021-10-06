@@ -24,4 +24,11 @@ export const GREEN = 'success'
 
 export const formatEth = (eth) => formatToken(eth)
 
+export const formatBalance = (balance) => {
+    const precision = 100
+    balance = web3.utils.fromWei(balance.toString(), 'ether')
+    balance = Math.round(balance * precision) / precision // redondeado a dos decimales
+    return balance;
+}
+
 export default { ETHER_ADDRESS, ether, tokens, wait, formatEth, formatToken, RED, GREEN }

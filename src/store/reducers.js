@@ -13,6 +13,9 @@ const web3Slice = createSlice({
             const { payload } = action
             return { ...state, account: payload }
         },
+        etherBalanceLoaded: (state, action) => {
+            return { ...state, balance: action.payload }
+        }
     }
 })
 //----- Token
@@ -23,6 +26,9 @@ const tokenSlice = createSlice({
         tokenLoaded: (state, action) => {
             const { payload } = action
             return { ...state, loaded: true, ...payload };
+        },
+        tokenBalanceLoaded: (state, action) => {
+            return { ...state, balance: action.payload }
         }
     }
 })
@@ -86,12 +92,24 @@ const exchangeSlice = createSlice({
                 }
             }
         },
+        balancesLoading: (state, action) => {
+            return { ...state, balancesLoading: true }
+        },
+        balancesLoaded: (state, action) => {
+            return { ...state, balancesLoading: false }
+        },
+        exchangeEtherBalanceLoaded: (state, action) => {
+            return { ...state, etherBalance: action.payload }
+        },
+        exchangeTokenBalanceLoaded: (state, action) => {
+            return { ...state, tokenBalance: action.payload }
+        }
     }
 })
 
-export const { loadWeb3, web3AccountLoaded } = web3Slice.actions;
-export const { tokenLoaded } = tokenSlice.actions
-export const { dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled, orderFilling, orderFilled } = exchangeSlice.actions
+export const { loadWeb3, web3AccountLoaded, etherBalanceLoaded } = web3Slice.actions;
+export const { tokenLoaded, tokenBalanceLoaded } = tokenSlice.actions
+export const { dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled, orderFilling, orderFilled, balancesLoading, balancesLoaded, exchangeEtherBalanceLoaded, exchangeTokenBalanceLoaded } = exchangeSlice.actions
 
 export const web3Reducer = web3Slice.reducer
 export const tokenReducer = tokenSlice.reducer;

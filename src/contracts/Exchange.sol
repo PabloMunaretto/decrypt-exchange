@@ -78,7 +78,7 @@ contract Exchange {
 
     function depositEther() payable public {
         tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].add(msg.value);
-        emit Deposit(ETHER, msg.sender, msg.value, tokens[ETHER][msg.sender]);        
+        emit Deposit(ETHER, msg.sender, msg.value, tokens[ETHER][msg.sender]);
     }
 
     function withdrawEther(uint256 _amount) public {
@@ -131,8 +131,8 @@ contract Exchange {
         _trade(_order.id, _order.user, _order.tokenGet, _order.amountGet, _order.tokenGive, _order.amountGive);
         // mark order as filled
         orderFilled[_order.id] = true;
-
     }
+    
     function _trade(uint256 _id, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) internal {
         //- execute the trade - charge fees - emit trade event
         // fee paid by user that fills the order (msg.sender)

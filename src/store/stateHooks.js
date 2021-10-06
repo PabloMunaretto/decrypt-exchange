@@ -1,7 +1,9 @@
-import { loadWeb3, web3AccountLoaded, tokenLoaded, dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled, orderFilling, orderFilled } from './reducers';
+import { loadWeb3, web3AccountLoaded, tokenLoaded, dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled, orderFilling, orderFilled, etherBalanceLoaded, tokenBalanceLoaded, exchangeEtherBalanceLoaded, exchangeTokenBalanceLoaded, balancesLoaded, balancesLoading } from './reducers';
 import Web3 from 'web3';
 import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json'
+import { ETHER_ADDRESS } from '../helpers';
+import { accountsChanged } from '../utils'
 
 // --------- Web3
 export const loadProvider = (dispatch) => {
@@ -15,7 +17,33 @@ export const loadAccount = async(web3, dispatch) => {
     const account = accounts[0];
     dispatch(web3AccountLoaded(account))
     return account
+    //   ethereum.on('chainChanged', (chainId) => {
+    //     // Handle the new chain.
+    //     // Correctly handling chain changes can be complicated.
+    //     // We recommend reloading the page unless you have good reason not to.
+    //     window.location.reload();
+    //   });
 }
+// --------- Account balances
+export const loadBalances = async(dispatch, web3, exchange, token, account) => {
+    // Ether balance in Wallet
+    const etherBalance = await web3.eth.getBalance(account);
+    dispatch(etherBalanceLoaded(etherBalance))
+    // Token balance in Wallet
+    const tokenBalance = await token.methods.balanceOf(account).call()
+    dispatch(tokenBalanceLoaded(tokenBalance))
+
+    // Ether balance in Exchange
+    const exchangeEtherBalance = await exchange.methods.balanceOf(ETHER_ADDRESS, account).call()
+    dispatch(exchangeEtherBalanceLoaded(exchangeEtherBalance))
+    // Token balance in Exchange
+    const exchangeTokenBalance = await exchange.methods.balanceOf(token.options.address, account).call()
+    dispatch(exchangeTokenBalanceLoaded(exchangeTokenBalance))
+
+    // Trigger all balances loaded
+    dispatch(balancesLoaded())
+}
+
 // --------- Token
 export const loadToken = async(web3, dispatch) => {
     const abi = Token.abi;
