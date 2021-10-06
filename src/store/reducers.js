@@ -75,7 +75,7 @@ const exchangeSlice = createSlice({
         },
         orderFilled: (state, action) => {
             const { payload } = action
-            // Prevent duplucate orders
+            // Prevent duplicate orders
             const index = state.filledOrders.data.findIndex(order => order.id === payload.id)
             let data;
             if (index === -1) {
@@ -92,6 +92,17 @@ const exchangeSlice = createSlice({
                 }
             }
         },
+        // depositedEth: (state, action) => {
+        //     const previousBalance = Number(state.etherBalance)
+        //     const newDeposit = Number(action.payload.amount)
+        //     const etherBalance = previousBalance + newDeposit
+        //     console.log("deposit", etherBalance, action.payload)
+        //     return {
+        //         ...state,
+        //         balancesLoading: false,
+        //         etherBalance
+        //     }
+        // },
         balancesLoading: (state, action) => {
             return { ...state, balancesLoading: true }
         },
@@ -103,13 +114,35 @@ const exchangeSlice = createSlice({
         },
         exchangeTokenBalanceLoaded: (state, action) => {
             return { ...state, tokenBalance: action.payload }
+        },
+        etherDepositAmountChange: (state, action) => {
+            return { ...state, etherDepositAmount: action.payload }
+        },
+        etherWithdrawAmountChange: (state, action) => {
+            return { ...state, etherWithdrawAmount: action.payload }
         }
     }
 })
 
 export const { loadWeb3, web3AccountLoaded, etherBalanceLoaded } = web3Slice.actions;
 export const { tokenLoaded, tokenBalanceLoaded } = tokenSlice.actions
-export const { dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled, orderFilling, orderFilled, balancesLoading, balancesLoaded, exchangeEtherBalanceLoaded, exchangeTokenBalanceLoaded } = exchangeSlice.actions
+export const { 
+    dexLoaded, 
+    cldOrdersLoaded, 
+    filledOrdersLoaded, 
+    allOrdersLoaded, 
+    orderCancelling, 
+    orderFilling, 
+    orderCancelled, 
+    orderFilled, 
+    // depositedEth,
+    balancesLoading, 
+    balancesLoaded, 
+    exchangeEtherBalanceLoaded, 
+    exchangeTokenBalanceLoaded,
+    etherDepositAmountChange,
+    etherWithdrawAmountChange
+} = exchangeSlice.actions
 
 export const web3Reducer = web3Slice.reducer
 export const tokenReducer = tokenSlice.reducer;

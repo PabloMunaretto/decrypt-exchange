@@ -1,4 +1,23 @@
-import { loadWeb3, web3AccountLoaded, tokenLoaded, dexLoaded, cldOrdersLoaded, filledOrdersLoaded, allOrdersLoaded, orderCancelling, orderCancelled, orderFilling, orderFilled, etherBalanceLoaded, tokenBalanceLoaded, exchangeEtherBalanceLoaded, exchangeTokenBalanceLoaded, balancesLoaded, balancesLoading } from './reducers';
+import { 
+    loadWeb3, 
+    web3AccountLoaded, 
+    tokenLoaded, 
+    dexLoaded, 
+    cldOrdersLoaded, 
+    filledOrdersLoaded, 
+    allOrdersLoaded, 
+    orderCancelling, 
+    orderFilling, 
+    orderCancelled, // events
+    orderFilled, // events
+    // depositedEth, // events
+    etherBalanceLoaded, 
+    tokenBalanceLoaded, 
+    exchangeEtherBalanceLoaded, 
+    exchangeTokenBalanceLoaded, 
+    balancesLoaded, 
+    balancesLoading 
+} from './reducers';
 import Web3 from 'web3';
 import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json'
@@ -16,12 +35,6 @@ export const loadAccount = async(web3, dispatch) => {
     const account = accounts[0];
     dispatch(web3AccountLoaded(account))
     return account
-    //   ethereum.on('chainChanged', (chainId) => {
-    //     // Handle the new chain.
-    //     // Correctly handling chain changes can be complicated.
-    //     // We recommend reloading the page unless you have good reason not to.
-    //     window.location.reload();
-    //   });
 }
 // --------- Account balances
 export const loadBalances = async(dispatch, web3, exchange, token, account) => {
@@ -102,6 +115,13 @@ export const subscribeToEvents = async(exchange, dispatch) => {
     exchange.events.Trade({}, (error, event) => {
         dispatch(orderFilled(event.returnValues))
     })
+    exchange.events.Deposit({}, (error, event) => {
+        // dispatch(depositedEth(event.returnValues))
+        dispatch(balancesLoaded(event.returnValues))
+    })
+    exchange.events.Withdraw({}, (error, event) => {
+        dispatch(balancesLoaded(event.returnValues))
+    })
 }
 
 // --------- Cancel Orders
@@ -125,5 +145,26 @@ export const fillOrder = async(exchange, dispatch, order, account) => {
         .on('error', (error) => {
             console.log(error)
             window.alert('There was an error filling the order')
+        })
+}
+// --------- Deposit & Withdraw Ether
+export const depositEther = async(dispatch, exchange, web3, amount, account) => {
+    exchange.methods.depositEther().send({ from: account, value: web3.utils.toWei(amount.toString(), 'Ether') })
+        .on('transactionHash', (hash) => {
+            dispatch(balancesLoading())
+        })
+        .on('error', (error) => {
+            console.log(error)
+            window.alert('There was an error depositing ETH into the exchange')
+        })
+}
+export const withdrawEther = async(dispatch, exchange, web3, amount, account) => {
+    exchange.methods.withdrawEther(web3.utils.toWei(amount.toString(), 'Ether')).send({ from: account })
+        .on('transactionHash', (hash) => {
+            dispatch(balancesLoading())
+        })
+        .on('error', (error) => {
+            console.log(error)
+            window.alert('There was an error withdrawing ETH from the exchange')
         })
 }
