@@ -3,11 +3,11 @@ import { useDispatch, connect } from 'react-redux';
 import './App.css';
 import NavBar from './NavBar';
 import Content from './Content';
-import { accountsChanged } from '../utils'
 import { loadProvider, loadAccount, loadToken, loadExchange } from '../store/stateHooks'
-import { accountSelector, contractsLoaderSelector } from '../store/storeSelectors'
+import { accountSelector, contractsLoaderSelector, web3Selector } from '../store/storeSelectors'
 
-function App({ contractsLoaded, accountLoaded }) {
+
+function App({ contractsLoaded, accountLoaded, web3 }) {
   const dispatch = useDispatch()
 
   const loadBlockchainData = useCallback(async() => {
@@ -25,10 +25,15 @@ function App({ contractsLoaded, accountLoaded }) {
     }
   }, [dispatch])
 
+  // Metamask events
+  window.ethereum.on('accountsChanged', async() => { 
+    if (web3) { await loadAccount(web3, dispatch) }
+  });
+  window.ethereum.on('chainChanged', () => { window.location.reload() });
+  
   useEffect(() => {
     loadBlockchainData()
-    accountsChanged()
-  }, [loadBlockchainData, accountsChanged])
+  }, [loadBlockchainData])
 
   return (
     <div>
@@ -40,7 +45,8 @@ function App({ contractsLoaded, accountLoaded }) {
 const hydrateRedux = (state, props) => { // hydrate App with redux state
   return ({
     contractsLoaded: contractsLoaderSelector(state, props),
-    accountLoaded: accountSelector(state)
+    accountLoaded: accountSelector(state),
+    web3: web3Selector(state)
   })
 };
 

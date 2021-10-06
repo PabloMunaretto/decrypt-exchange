@@ -3,7 +3,6 @@ import Web3 from 'web3';
 import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json'
 import { ETHER_ADDRESS } from '../helpers';
-import { accountsChanged } from '../utils'
 
 // --------- Web3
 export const loadProvider = (dispatch) => {
