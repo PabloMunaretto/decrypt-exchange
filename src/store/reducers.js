@@ -120,6 +120,12 @@ const exchangeSlice = createSlice({
         },
         etherWithdrawAmountChange: (state, action) => {
             return { ...state, etherWithdrawAmount: action.payload }
+        },
+        tokenDepositAmountChange: (state, action) => {
+            return { ...state, tokenDepositAmount: action.payload }
+        },
+        tokenWithdrawAmountChange: (state, action) => {
+            return { ...state, tokenWithdrawAmount: action.payload }
         }
     }
 })
@@ -141,7 +147,9 @@ export const {
     exchangeEtherBalanceLoaded, 
     exchangeTokenBalanceLoaded,
     etherDepositAmountChange,
-    etherWithdrawAmountChange
+    etherWithdrawAmountChange,
+    tokenDepositAmountChange,
+    tokenWithdrawAmountChange
 } = exchangeSlice.actions
 
 export const web3Reducer = web3Slice.reducer

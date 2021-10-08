@@ -1,8 +1,19 @@
 import React, { useEffect, useCallback } from "react";
 import Spinner from "./Spinner";
 import { useDispatch, connect } from "react-redux";
-import { subscribeToEvents, loadBalances, depositEther, withdrawEther } from "../store/stateHooks";
-import { etherDepositAmountChange, etherWithdrawAmountChange } from '../store/reducers'
+import { subscribeToEvents, 
+  loadBalances, 
+  depositEther, 
+  withdrawEther,
+  depositToken,
+  withdrawToken
+} from "../store/stateHooks";
+import { 
+  etherDepositAmountChange, 
+  etherWithdrawAmountChange,
+  tokenDepositAmountChange,
+  tokenWithdrawAmountChange
+} from '../store/reducers'
 import {
   exchangeSelector,
   web3Selector,
@@ -14,7 +25,9 @@ import {
   exchangeTokenBalanceSelector,
   balancesLoadingSelector,
   etherDepositAmountSelector,
-  etherWithdrawAmountSelector
+  etherWithdrawAmountSelector,
+  tokenDepositAmountSelector,
+  tokenWithdrawAmountSelector
 } from "../store/storeSelectors";
 import { Tab, Tabs } from "react-bootstrap";
 
@@ -30,7 +43,9 @@ const showFormFunc = (props) => {
       web3,
       dispatch,
       etherDepositAmount,
-      etherWithdrawAmount
+      etherWithdrawAmount,
+      tokenDepositAmount,
+      tokenWithdrawAmount
   } = props;
 
   return (
@@ -72,6 +87,7 @@ const showFormFunc = (props) => {
                 className='btn btn-primary btn-block btn-sm'>Deposit</button>
             </div>
         </form>
+
         <table className="table table-dark table-sm small">
           <tbody>
             <tr>
@@ -81,7 +97,29 @@ const showFormFunc = (props) => {
             </tr>
           </tbody>
         </table>
+
+        <form className='row' onSubmit={(e) => {
+            e.preventDefault()
+            depositToken(dispatch, exchange, token, web3, tokenDepositAmount, account)
+        }}>
+            <div className='col-12 col-sm pr-sm-2'>
+                <input
+                type='text'
+                placeHolder='Token amount'
+                onChange={(e) => dispatch(tokenDepositAmountChange(e.target.value))}
+                className='form-control form-control-sm bg-dark text-white'
+                required
+                />
+            </div>
+            <div className='col-12 col-sm-auto pl-sm-0'>
+                <button
+                type='submit'
+                className='btn btn-primary btn-block btn-sm'>Deposit</button>
+            </div>
+        </form>
+
       </Tab>
+      
       <Tab eventKey="withdraw" title="withdraw" className="bg-dark">
         <table className="table table-dark table-sm small">
           <thead>
@@ -119,6 +157,7 @@ const showFormFunc = (props) => {
                 className='btn btn-primary btn-block btn-sm'>Withdraw</button>
             </div>
         </form>
+
         <table className="table table-dark table-sm small">
           <tbody>
             <tr>
@@ -129,6 +168,25 @@ const showFormFunc = (props) => {
           </tbody>
         </table>
 
+        <form className='row' onSubmit={(e) => {
+            e.preventDefault()
+            withdrawToken(dispatch, exchange, token, web3, tokenWithdrawAmount, account)
+        }}>
+            <div className='col-12 col-sm pr-sm-2'>
+                <input
+                type='text'
+                placeHolder='Token amount'
+                onChange={(e) => dispatch(tokenWithdrawAmountChange(e.target.value))}
+                className='form-control form-control-sm bg-dark text-white'
+                required
+                />
+            </div>
+            <div className='col-12 col-sm-auto pl-sm-0'>
+                <button
+                type='submit'
+                className='btn btn-primary btn-block btn-sm'>Withdraw</button>
+            </div>
+        </form>
       </Tab>
     </Tabs>
   );
@@ -170,7 +228,9 @@ const hydrateRedux = (state) => {
     balancesLoading,
     showForm: !balancesLoading,
     etherDepositAmount: etherDepositAmountSelector(state),
-    etherWithdrawAmount: etherWithdrawAmountSelector(state)
+    etherWithdrawAmount: etherWithdrawAmountSelector(state),
+    tokenDepositAmount: tokenDepositAmountSelector(state),
+    tokenWithdrawAmount: tokenWithdrawAmountSelector(state)
   };
 };
 

@@ -168,3 +168,32 @@ export const withdrawEther = async(dispatch, exchange, web3, amount, account) =>
             window.alert('There was an error withdrawing ETH from the exchange')
         })
 }
+// --------- Deposit & Withdraw Tokens
+
+export const depositToken = (dispatch, exchange, token, web3, amount, account) => {
+    amount = web3.utils.toWei(amount, 'ether')
+
+    token.methods.approve(exchange.options.address, amount).send({ from: account })
+        .on('transactionHash', (hash) => {
+            exchange.methods.depositToken(token.options.address, amount).send({ from: account })
+                .on('transactionHash', (hash) => {
+                    dispatch(balancesLoading())
+                })
+                .on('error', (error) => {
+                    console.error(error)
+                    window.alert('there was an error depositing Tokens')
+                })
+        })
+}
+export const withdrawToken = (dispatch, exchange, token, web3, amount, account) => {
+    amount = web3.utils.toWei(amount, 'ether')
+
+    exchange.methods.withdrawToken(token.options.address, amount).send({ from: account})
+        .on('transactionHash', (hash) => {
+            dispatch(balancesLoading())
+        })
+        .on('error', (error) => {
+            console.error(error)
+            window.alert('there was an error withdrawing tokens')
+        })
+}
