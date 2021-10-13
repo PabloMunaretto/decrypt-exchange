@@ -2,7 +2,7 @@ import React from "react";
 
 function NavBar({account}) {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav className="navbar navbar-expand-lg navbar-dark ">
       <a className="navbar-brand" href="/#">
         Dapp Token Exchange
       </a>

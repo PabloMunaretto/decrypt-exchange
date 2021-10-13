@@ -1,3 +1,7 @@
+.navbar {
+  background: linear-gradient(to right, #2da9cf, #b88989);
+  box-shadow: inset 2px 2px 10px black;
+}
 .content  {
   background-color: #1d1d1d;
   position: absolute;
@@ -106,6 +110,11 @@
   overflow-x: hidden;
   position: relative;
   padding: 2px;
+}
+.card-body::-webkit-scrollbar {
+  background-color: #2ECCFA;
+  width: 7px;
+  border-radius: 5px;
 }
 
 .card-body th {
