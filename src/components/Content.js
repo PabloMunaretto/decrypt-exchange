@@ -2,11 +2,12 @@ import React, { useEffect, useCallback } from 'react'
 import { useDispatch, connect } from 'react-redux';
 import { exchangeSelector } from '../store/storeSelectors';
 import { loadAllOrders, subscribeToEvents } from '../store/stateHooks';
-import Balance from './Balance'
+import Balance from './balances/Balance'
 import Trades from './Trades';
 import OrderBook from './OrderBook';
 import MyTransactions from './MyTransactions'
 import PriceChart from './PriceChart'
+import NewOrder from './newOrder/NewOrder'
 
 function Content({ exchange }) {
   const dispatch = useDispatch()
@@ -24,15 +25,7 @@ function Content({ exchange }) {
       <div className="content">
         <div className="vertical-split">
           <Balance />
-          <div className="card bg-dark text-white">
-            <div className="card-header">
-              Card Title
-            </div>
-            <div className="card-body">
-              <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="/#" className="card-link">Card link</a>
-            </div>
-          </div>
+          <NewOrder />
         </div>
         <OrderBook />
         <div className="vertical-split">

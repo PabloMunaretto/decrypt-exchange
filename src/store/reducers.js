@@ -126,7 +126,53 @@ const exchangeSlice = createSlice({
         },
         tokenWithdrawAmountChange: (state, action) => {
             return { ...state, tokenWithdrawAmount: action.payload }
-        }
+        },
+        // BUY ORDERS
+        buyOrderAmountChanged: (state, action) => {
+            return { ...state, buyOrder: { ...state.buyOrder, amount: action.payload }}
+        },
+        buyOrderPriceChanged: (state, action) => {
+            return { ...state, buyOrder: { ...state.buyOrder, price: action.payload }}
+        },
+        buyOrderMaking: (state, action) => {
+            return { ...state, buyOrder: { ...state.buyOrder, amount: null, price: null, making: true }}
+        },
+        orderMade: (state, action) => {
+            const { payload } = action
+            // Prevent duplicate orders
+            let data;
+            const index = state.allOrders.data.findIndex(order => order.id === payload.id )
+            if (index === -1) {
+                data = [ ...state.allOrders.data, payload ]
+            } else {
+                data = state.allOrders.data
+            }
+            return {
+                ...state,
+                allOrders: {
+                    ...state.allOrders,
+                    data
+                },
+                buyOrder: {
+                    ...state.buyOrder,
+                    making: false
+                },
+                sellOrder: {
+                    ...state.sellOrder,
+                    making: false
+                }
+            }
+        },
+        // SELL ORDERS
+        sellOrderAmountChanged: (state, action) => {
+            return { ...state, sellOrder: { ...state.sellOrder, amount: action.payload }}
+        },
+        sellOrderPriceChanged: (state, action) => {
+            return { ...state, sellOrder: { ...state.sellOrder, price: action.payload }}
+        },
+        sellOrderMaking: (state, action) => {
+            return { ...state, sellOrder: { ...state.sellOrder, amount: null, price: null, making: true }}
+        },
     }
 })
 
@@ -149,7 +195,14 @@ export const {
     etherDepositAmountChange,
     etherWithdrawAmountChange,
     tokenDepositAmountChange,
-    tokenWithdrawAmountChange
+    tokenWithdrawAmountChange,
+    buyOrderAmountChanged,
+    buyOrderPriceChanged,
+    buyOrderMaking,
+    orderMade,
+    sellOrderAmountChanged,
+    sellOrderPriceChanged,
+    sellOrderMaking
 } = exchangeSlice.actions
 
 export const web3Reducer = web3Slice.reducer

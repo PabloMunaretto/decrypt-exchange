@@ -349,10 +349,16 @@ export const etherDepositAmountSelector = createSelector(etherDepositAmount, amo
 
 const etherWithdrawAmount = state => get(state, 'dexData.etherWithdrawAmount', null)
 export const etherWithdrawAmountSelector = createSelector(etherWithdrawAmount, amount => amount)
-//    tokenDepositAmountChange, tokenWithdrawAmountChange
 
 const tokenDepositAmount = state => get(state, 'dexData.tokenDepositAmount', null)
 export const tokenDepositAmountSelector = createSelector(tokenDepositAmount, amount => amount)
 
 const tokenWithdrawAmount = state => get(state, 'dexData.tokenWithdrawAmount', null)
 export const tokenWithdrawAmountSelector = createSelector(tokenWithdrawAmount, amount => amount)
+
+// ----- CREATE BUY & SELL orders
+const buyOrder = state => get(state, 'dexData.buyOrder', {})
+export const buyOrderSelector = createSelector(buyOrder, order => order)
+
+const sellOrder = state => get(state, 'dexData.sellOrder', {})
+export const sellOrderSelector = createSelector(sellOrder, order => order)
