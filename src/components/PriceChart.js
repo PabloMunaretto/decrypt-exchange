@@ -2,7 +2,7 @@ import React from "react";
 import Chart from 'react-apexcharts'
 import { connect } from 'react-redux'
 import Spinner from './Spinner'
-import { chartOptions } from './PriceChart.config'
+import { chartOptions, dummyData } from './PriceChart.config'
 import {
     priceChartLoadedSelector,
     priceChartSelector
@@ -19,6 +19,7 @@ const priceSymbol = (lastPriceChange) => {
 }
 
 const showPriceChart = (priceChart) => {
+    console.log("PRICE", priceChart)
     return (
         <div className='price-chart'>
             <div className='price'>
@@ -27,9 +28,9 @@ const showPriceChart = (priceChart) => {
             <Chart 
             options={chartOptions}
             series={priceChart.series}
-            type='candlestick'
-            width='100%'
-            height='100%'
+            type="candlestick"
+            width="100%"
+            height="100%"
             />
         </div>
     )

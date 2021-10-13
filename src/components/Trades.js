@@ -10,7 +10,7 @@ function Trades({ filledOrdersLoaded, filledOrders }) {
       <div className="card bg-dark text-white">
         <div className="card-header">Trades</div>
         <div className="card-body">
-          <table class="table">
+          <table class="table table-dark table-sm small">
             <thead>
               <tr>
                 <th scope="col">Time</th>
