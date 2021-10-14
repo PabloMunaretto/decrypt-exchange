@@ -9,6 +9,7 @@
     "node": "14.17.6"
   },
   "dependencies": {
+    "@metamask/detect-provider": "^1.2.0",
     "@reduxjs/toolkit": "^1.6.1",
     "@truffle/hdwallet-provider": "^1.5.0",
     "apexcharts": "^3.28.3",
@@ -36,7 +37,7 @@
     "redux-logger": "3.0.6",
     "reselect": "4.0.0",
     "solidity-coverage": "^0.7.17",
-    "truffle": "5.1.45",
+    "truffle": "^5.4.14",
     "truffle-flattener": "1.5.0",
     "truffle-hdwallet-provider-privkey": "0.3.0",
     "web3": "1.2.6"

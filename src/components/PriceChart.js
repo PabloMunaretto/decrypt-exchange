@@ -19,7 +19,6 @@ const priceSymbol = (lastPriceChange) => {
 }
 
 const showPriceChart = (priceChart) => {
-    console.log("PRICE", priceChart)
     return (
         <div className='price-chart'>
             <div className='price'>
@@ -39,12 +38,12 @@ const showPriceChart = (priceChart) => {
 function PriceChart({ priceChartLoaded, priceChart }) {
   return (
     <div className="card bg-dark text-white">
-      <div className="card-header">
+        <div className="card-header">
           Price Chart
-          </div>
-      <div className="card-body">
-          { priceChartLoaded ? showPriceChart(priceChart) : <Spinner />}
-      </div>
+        </div>
+        <div className="card-body">
+            { priceChartLoaded ? showPriceChart(priceChart) : <Spinner />}
+        </div>
     </div>
   );
 }
