@@ -30,5 +30,54 @@ export const formatBalance = (balance) => {
     balance = Math.round(balance * precision) / precision // redondeado a dos decimales
     return balance;
 }
+export const configureNetwork = async(web3, dispatch, loadAccount) => {
+    if (web3) {
+        try {
+          // check if the chain to connect to is installed
+  
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0xfa2' }], // chainId must be in hexadecimal numbers
+          });
+            window.location.reload()
+        } catch (error) {
+          // This error code indicates that the chain has not been added to MetaMask
+          // if it is not, then install it into the user MetaMask
+          if (error.code === 4902 || error.code === -32603) {
+            try {
+              await window.ethereum
+                .request({
+                  method: 'wallet_addEthereumChain',
+                  params: [
+                    {
+                      chainId: '0xfa2',
+                      rpcUrl: 'https://rpc.testnet.fantom.network/',
+                    },
+                  ],
+                  params: [
+                    {
+                      chainId: '0xfa2',
+                      chainName: 'Fantom Opera Testnet',
+                      rpcUrls: ['https://rpc.testnet.fantom.network/'],
+                      nativeCurrency: {
+                        name: 'Fantom ETH',
+                        symbol: 'FTM',
+                        decimals: 18,
+                      },
+                      blockExplorerUrls: ['https://testnet.ftmscan.com/'],
+                    },
+                  ],
+                })
+                .then(() => {
+                    window.location.reload()
+                });
+            } catch (addError) {
+              console.error(addError);
+            }
+          }
+          console.error(error);
+        }
+    }
+}
 
 export default { ETHER_ADDRESS, ether, tokens, wait, formatEth, formatToken, RED, GREEN }

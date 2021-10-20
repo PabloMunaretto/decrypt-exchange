@@ -5,6 +5,7 @@ import NavBar from './NavBar';
 import Content from './Content';
 import { loadProvider, loadAccount, loadToken, loadExchange } from '../store/stateHooks'
 import { accountSelector, contractsLoaderSelector, web3Selector } from '../store/storeSelectors'
+import { configureNetwork } from '../helpers'
 // import detectEthereumProvider from '@metamask/detect-provider';
 
 function App({ contractsLoaded, accountLoaded, web3 }) {
@@ -32,9 +33,12 @@ function App({ contractsLoaded, accountLoaded, web3 }) {
   });
   window.ethereum.on('chainChanged', () => { window.location.reload() });
   
+  
   useEffect(() => {
     loadBlockchainData()
   }, [loadBlockchainData])
+  
+  // useEffect(() => { configureNetwork(web3, dispatch, loadAccount) }, [web3])
 
   return (
     <div>
