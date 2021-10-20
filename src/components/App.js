@@ -4,13 +4,14 @@ import './App.css';
 import NavBar from './NavBar';
 import Content from './Content';
 import { loadProvider, loadAccount, loadToken, loadExchange } from '../store/stateHooks'
-import { accountSelector, contractsLoaderSelector, web3Selector } from '../store/storeSelectors'
+import { accountSelector, contractsLoaderSelector, web3Selector, tokenPriceSelector } from '../store/storeSelectors'
 import { configureNetwork } from '../helpers'
 // import detectEthereumProvider from '@metamask/detect-provider';
 
-function App({ contractsLoaded, accountLoaded, web3 }) {
+function App({ contractsLoaded, accountLoaded, web3, PBS }) {
   const dispatch = useDispatch()
   // const provider = async() => await detectEthereumProvider()
+  if (PBS) { document.title = `Decrypt - $${PBS} ETH` }
 
   const loadBlockchainData = useCallback(async() => {
     const web3 = loadProvider(dispatch);
@@ -32,11 +33,10 @@ function App({ contractsLoaded, accountLoaded, web3 }) {
     if (web3) { await loadAccount(web3, dispatch) }
   });
   window.ethereum.on('chainChanged', () => { window.location.reload() });
-  
+
   useEffect(() => {
     loadBlockchainData()
   }, [loadBlockchainData])
-  
   // useEffect(() => { configureNetwork(web3, dispatch, loadAccount) }, [web3])
 
   return (
@@ -50,7 +50,8 @@ const hydrateRedux = (state, props) => { // hydrate App with redux state
   return ({
     contractsLoaded: contractsLoaderSelector(state, props),
     accountLoaded: accountSelector(state),
-    web3: web3Selector(state)
+    web3: web3Selector(state),
+    PBS: tokenPriceSelector(state)
   })
 };
 

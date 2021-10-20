@@ -362,3 +362,13 @@ export const buyOrderSelector = createSelector(buyOrder, order => order)
 
 const sellOrder = state => get(state, 'dexData.sellOrder', {})
 export const sellOrderSelector = createSelector(sellOrder, order => order)
+
+
+// tokenPrice Selector
+export const tokenPriceSelector = createSelector(
+    filledOrdersSelector,
+    (filledOrdersSelector) => {
+        const lastTrade = filledOrdersSelector[filledOrdersSelector.length-1]
+        return lastTrade?.tokenPrice
+    }
+)
