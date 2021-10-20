@@ -5,11 +5,11 @@ import NavBar from './NavBar';
 import Content from './Content';
 import { loadProvider, loadAccount, loadToken, loadExchange } from '../store/stateHooks'
 import { accountSelector, contractsLoaderSelector, web3Selector } from '../store/storeSelectors'
-import detectEthereumProvider from '@metamask/detect-provider';
+// import detectEthereumProvider from '@metamask/detect-provider';
 
 function App({ contractsLoaded, accountLoaded, web3 }) {
   const dispatch = useDispatch()
-  const provider = async() => await detectEthereumProvider()
+  // const provider = async() => await detectEthereumProvider()
 
   const loadBlockchainData = useCallback(async() => {
     const web3 = loadProvider(dispatch);
