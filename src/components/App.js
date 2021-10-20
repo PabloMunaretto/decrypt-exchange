@@ -33,7 +33,6 @@ function App({ contractsLoaded, accountLoaded, web3 }) {
   });
   window.ethereum.on('chainChanged', () => { window.location.reload() });
   
-  
   useEffect(() => {
     loadBlockchainData()
   }, [loadBlockchainData])
