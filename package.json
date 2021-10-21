@@ -6,6 +6,7 @@
   "private": true,
   "homepage": ".",
   "engines": {
+    "yarn": "1.22.10",
     "node": "14.18.1"
   },
   "dependencies": {
