@@ -51,12 +51,6 @@ export const configureNetwork = async(web3, dispatch, loadAccount) => {
                   params: [
                     {
                       chainId: '0xfa2',
-                      rpcUrl: 'https://rpc.testnet.fantom.network/',
-                    },
-                  ],
-                  params: [
-                    {
-                      chainId: '0xfa2',
                       chainName: 'Fantom Opera Testnet',
                       rpcUrls: ['https://rpc.testnet.fantom.network/'],
                       nativeCurrency: {
