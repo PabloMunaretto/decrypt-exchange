@@ -4,7 +4,6 @@
   "description": "Decentralized Ethereum Token Exchange",
   "author": "pablo.munaretto@gmail.com",
   "private": true,
-  "homepage": "./.", 
   "engines": {
     "yarn": "1.22.10",
     "node": "14.18.1"
@@ -48,7 +47,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "heroku-postbuild": "yarn install && yarn run build"
   },
   "eslintConfig": {
     "extends": "react-app"
