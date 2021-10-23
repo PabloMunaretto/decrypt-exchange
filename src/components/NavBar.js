@@ -1,6 +1,8 @@
 import React from "react";
+import { formatAccount } from '../helpers'
 
 function NavBar({account}) {
+  
   return (
     <nav className="navbar navbar-expand-lg navbar-dark ">
       <a className="navbar-brand" href="/#">
@@ -12,8 +14,8 @@ function NavBar({account}) {
       <div className="collapse navbar-collapse" id="navbarNavDropdown">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <a className="nav-link" href={`https://etherscan.io/address/${account}`} target='_blank' rel='noopener noreferrer'>
-              {account}
+            <a className="nav-link" href={`https://testnet.ftmscan.com/address/${account}`} target='_blank' rel='noopener noreferrer'>
+              {account && formatAccount(account)}
             </a>
           </li>
         </ul>

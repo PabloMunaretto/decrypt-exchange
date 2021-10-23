@@ -30,7 +30,7 @@ export const formatBalance = (balance) => {
     balance = Math.round(balance * precision) / precision // redondeado a dos decimales
     return balance;
 }
-export const configureNetwork = async(web3, dispatch, loadAccount) => {
+export const configureNetwork = async(web3) => {
     if (web3) {
         try {
           // check if the chain to connect to is installed
@@ -72,6 +72,13 @@ export const configureNetwork = async(web3, dispatch, loadAccount) => {
           console.error(error);
         }
     }
+}
+
+export const formatAccount = (account) => {
+    const A = account.slice(0, 4);
+    const B = account.slice(account.length-4);
+    const formatedAccount = `${A}...${B}`;
+    return formatedAccount;
 }
 
 export default { ETHER_ADDRESS, ether, tokens, wait, formatEth, formatToken, RED, GREEN }
