@@ -5,7 +5,7 @@
   "author": "pablo.munaretto@gmail.com",
   "private": true,
   "engines": {
-    "node": "16.13.0",
+    "node": "14.18.1",
     "yarn": "1.22.10"
   },
   "dependencies": {
