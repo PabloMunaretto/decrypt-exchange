@@ -31,6 +31,7 @@ export const formatBalance = (balance) => {
     return balance;
 }
 export const configureNetwork = async(web3) => {
+  console.log("ENTRAS", web3)
     if (web3) {
         try {
           // check if the chain to connect to is installed
@@ -39,7 +40,7 @@ export const configureNetwork = async(web3) => {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: '0xfa2' }], // chainId must be in hexadecimal numbers
           });
-            window.location.reload()
+            // window.location.reload()
         } catch (error) {
           // This error code indicates that the chain has not been added to MetaMask
           // if it is not, then install it into the user MetaMask
@@ -62,9 +63,6 @@ export const configureNetwork = async(web3) => {
                     },
                   ],
                 })
-                .then(() => {
-                    window.location.reload()
-                });
             } catch (addError) {
               console.error(addError);
             }

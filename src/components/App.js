@@ -16,16 +16,9 @@ function App({ contractsLoaded, accountLoaded, web3, PBS }) {
   const loadBlockchainData = useCallback(async() => {
     const web3 = loadProvider(dispatch);
     await loadAccount(web3, dispatch);
-    const token = await loadToken(web3, dispatch);
-    if (!token) {
-      window.alert("Token Smart Contract not detected on the current network, please select another network with Metamask.");
-      return
-    }
-    const exchange = await loadExchange(web3, dispatch);
-    if (!exchange) {
-      window.alert("Exchange Smart Contract not detected on the current network, please select another network with Metamask.");
-      return
-    }
+    await loadToken(web3, dispatch);
+    loadExchange(web3, dispatch);
+    configureNetwork(web3)
   }, [dispatch])
 
   // Metamask events
@@ -37,7 +30,6 @@ function App({ contractsLoaded, accountLoaded, web3, PBS }) {
   useEffect(() => {
     loadBlockchainData()
   }, [loadBlockchainData])
-  // useEffect(() => { configureNetwork(web3, dispatch, loadAccount) }, [web3])
 
   return (
     <div>
