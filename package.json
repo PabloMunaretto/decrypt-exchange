@@ -5,7 +5,7 @@
   "author": "pablo.munaretto@gmail.com",
   "private": true,
   "engines": {
-    "node": "16.13.1"
+    "node": "14.x"
   },
   "dependencies": {
     "@metamask/detect-provider": "^1.2.0",
