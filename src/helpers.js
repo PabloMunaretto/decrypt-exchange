@@ -31,7 +31,6 @@ export const formatBalance = (balance) => {
     return balance;
 }
 export const configureNetwork = async(web3) => {
-  console.log("ENTRAS", web3)
     if (web3) {
         try {
           // check if the chain to connect to is installed

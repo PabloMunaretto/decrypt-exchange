@@ -21,7 +21,7 @@ import {
     sellOrderMaking,
     orderMade
 } from './reducers';
-import Web3 from 'web3';
+import Web3 from 'web3/dist/web3';
 import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json'
 import { ETHER_ADDRESS } from '../helpers';
@@ -34,7 +34,7 @@ export const loadProvider = (dispatch) => {
 }
 // --------- Account
 export const loadAccount = async(web3, dispatch) => {
-    const accounts = await web3.eth.getAccounts();
+    const accounts = await web3.eth.requestAccounts();
     const account = accounts[0];
     dispatch(web3AccountLoaded(account))
     return account

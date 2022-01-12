@@ -4,9 +4,7 @@
   "description": "Decentralized Ethereum Token Exchange",
   "author": "pablo.munaretto@gmail.com",
   "private": true,
-  "engines": {
-    "node": "14.16.0"
-  },
+
   "dependencies": {
     "@metamask/detect-provider": "^1.2.0",
     "@reduxjs/toolkit": "^1.6.1",
