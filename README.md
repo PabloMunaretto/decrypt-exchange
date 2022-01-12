@@ -1,6 +1,9 @@
 # DApp Crypto Exchange
 ## Dapp University course
 
+- Deployado en Heroku
+    -   https://decrypt-dapp-u.herokuapp.com/
+
 - Download the metamask browser extension
 
 - Configure testnet on your metamask browser extension (metamask config => id: 4002, rpc: "https://rpc.testnet.fantom.network/").
@@ -11,6 +14,8 @@
 
 - Trade!
 
-project diagram:
+## project diagram
 <img src="./public/flow-diagram.png">
-<img src="./public/flow-diagram.png">
+
+## Overview
+<!-- <img src="./public/overview.png"> -->
