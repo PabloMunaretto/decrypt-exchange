@@ -11,3 +11,6 @@
 
 - Trade!
 
+project diagram:
+<img src="./public/flow-diagram.png">
+<img src="./public/flow-diagram.png">
